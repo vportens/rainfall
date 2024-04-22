@@ -1,0 +1,13 @@
+void run(){
+	fwrite("wait what");
+	systeme("/bin/sh");	
+	return;
+}
+
+
+int main() {
+	char input[76];
+
+	get(input);
+	return;
+}

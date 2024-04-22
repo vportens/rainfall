@@ -1,0 +1,10 @@
+int main(int ac, char **av){
+	int input;
+
+	input = atoi(av[1]);
+	if (input == 423) {
+		execve(/bin/sh);
+	}
+	printf("No !");
+	exit
+}

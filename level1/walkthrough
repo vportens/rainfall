@@ -1,0 +1,23 @@
+# Level1
+
+
+## Information with Ghidra 
+
+Ghidra show us that  the main function have a variable that is a string with a length of 76 : string var[76] and that var is send to gets.
+
+Gets use stdin to fill the variable give it to it, so here if the input is greater than 76 caractere then there is a overflow.   
+The overflow link to and address.  
+Using buffer overflow pattern generator and gdb we can see that the overflow link to the address of the 4 combines caractere after the length max of the buffer.  
+
+Here is the tricks : 
+Because there is a function named run, that call systeme('/bin/sh'), and that function is store at an address,   
+We are going to try to link the overflow addresse to the address of the function.  
+
+To do so, python will be our great friends :)
+So we gonna write a sting with 76caracteres of your choise and the last 4 need to be the address of the function run,
+Run's addresse : 0x08048444
+python function look like :
+python -c 'print("A" * 76" + "\x44\x84\x04\x08")' > /tmp/file
+
+All that in a file, then execute the file in level1 : cat /tmp/file - | ./level1
+

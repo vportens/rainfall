@@ -1,0 +1,10 @@
+# Use GDB | 
+
+- First we see with  disass tab all function in the programme,  
+there is a main
+- In the main function we see atoi is call then the result is use in cmp with 0x1a7 --> 423 in hexa if true, it's call execv
+
+## Use Ghidra
+
+Using Ghidra we see that the main function is easly readable and is doing a comparaison between atoi(argv[1]) and 423.  
+If these comparaison is true then it's excecuting a shell.
