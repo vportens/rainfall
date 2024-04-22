@@ -1,0 +1,21 @@
+void p() {
+	char buff[76];
+	unsigned int ret_addr = 0;
+
+	fflush(stdout);
+	gets(buff);
+	if ((ret_addr & 0xb0000000) == 0xb0000000) {
+		printf("%p\n", ret_addr);
+		exit(1);
+	}
+	puts(buff);
+	strdup(buff);
+	return();
+
+}
+
+
+int main() {
+	p();
+	exit();
+}
