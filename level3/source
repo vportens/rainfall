@@ -1,0 +1,15 @@
+void v() {
+	char buff[520];
+	sget(buff, 200, stdin);
+	prinf(buff);
+	if (*m == 64) {
+		fwrite("Wait what?!\n",1,0xc,stdout);
+		system("/bin/sh");
+	}
+	exit()
+}
+
+int main() {
+	v()
+	exit()
+}

