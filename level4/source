@@ -1,0 +1,21 @@
+
+void p(char *buff) {
+	printf(buff);
+	return;
+}
+
+void n(){
+	char buffer[520]
+	sget(buffer, 200, stdin);
+	p(buffer);
+
+	if (*m == 16930116)
+		system("/bin/cat /home/user/level5/.pass");
+
+	return;
+}
+
+int main() {
+	n()
+	return;
+}
