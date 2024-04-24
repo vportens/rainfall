@@ -1,0 +1,27 @@
+
+
+void n() {
+	system("/bin/cat /home/user/level7/.pass")
+	return;
+}
+
+
+void m(char *param1, int param2, char *param3) {
+	puts("Nope");
+	return;
+}
+
+void main(int ac, char **av) {
+
+	char *dest;
+	code **funct;
+
+	dest = (char *)malloc(64);
+	funct = (code **)malloc(4);
+
+	funct = m;
+
+	strcpy(dest, av[1]);
+	(**funct)(); // appel la function m avec un pointeur sur fonction
+	return ;
+}
