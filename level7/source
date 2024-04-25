@@ -1,0 +1,32 @@
+void m(void *param1) {
+	time_t tvar1;
+
+	tvar1 = time((time_t *)NULL);
+
+	printf("%s - %d\n", c, tvar1);
+}
+
+int main(int ac, char **av) {
+	undefined4 *puVar1;
+	void *puVar2;
+	undefined4 *puVar3;
+	FILE *_stream;
+
+	puVar1 = (undefined4 *)malloc(8);
+	*puVar1 = 1;
+	pvVar2 = malloc(8);
+	puVar1[1] = pvVar2;
+	puVar3 = (undefined4 *)malloc(8);
+	*puVar3 = 2;
+	pvVar2 = malloc(8);
+	puVar3[1] = pvVar2;
+
+	strcpy((char *)puVar1[1],*(char **)(av[1]));
+	strcpy((char *)puVar3[1],*(char **)(av[2]));
+
+	__stream = fopen("/home/user/level8/.pass","r");
+	fgets(c,0x44,__stream);
+
+	puts("~~");
+	return 0;
+}
